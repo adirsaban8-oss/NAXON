@@ -1,17 +1,7 @@
 const PDFDocument = require('pdfkit');
-const path = require('path');
-
-const FONT_REGULAR = 'C:/Windows/Fonts/arial.ttf';
-const FONT_BOLD = 'C:/Windows/Fonts/arialbd.ttf';
 
 function generateQuoteId() {
   return 'NX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-}
-
-function hebrewDate() {
-  const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
-  const d = new Date();
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 function generateQuotePDF(services) {
@@ -22,115 +12,113 @@ function generateQuotePDF(services) {
       doc.on('data', b => buffers.push(b));
       doc.on('end', () => resolve(Buffer.concat(buffers)));
 
-      doc.registerFont('Hebrew', FONT_REGULAR);
-      doc.registerFont('Hebrew-Bold', FONT_BOLD);
-
       const pricedServices = services.filter(s => !s.customPrice);
       const customServices = services.filter(s => s.customPrice);
       const total = pricedServices.reduce((sum, s) => sum + s.price, 0);
       const beforeVat = Math.round(total / 1.18);
       const vat = total - beforeVat;
       const quoteId = generateQuoteId();
-      const date = hebrewDate();
+      const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
 
       // ── Header ──
-      doc.rect(0, 0, 595, 140).fill('#020617');
-      doc.rect(0, 140, 595, 3).fill('#00a6ff');
+      doc.rect(0, 0, 595, 130).fill('#020617');
+      doc.rect(0, 130, 595, 3).fill('#00a6ff');
 
-      // Logo
-      doc.fontSize(32).font('Hebrew-Bold').fillColor('#00a6ff').text('NAXON MOBILE', 50, 30, { width: 495, align: 'center' });
-      doc.fontSize(10).font('Hebrew').fillColor('#94a3b8').text('פתרונות דיגיטליים חכמים  •  אתרים  •  AI  •  אוטומציה', 50, 70, { width: 495, align: 'center' });
+      doc.fontSize(30).font('Helvetica-Bold').fillColor('#00a6ff')
+        .text('NAXON MOBILE', 50, 32, { width: 495, align: 'center' });
+      doc.fontSize(10).font('Helvetica').fillColor('#94a3b8')
+        .text('Smart Digital Solutions  |  Websites  |  AI  |  Automation', 50, 70, { width: 495, align: 'center' });
+      doc.fontSize(16).font('Helvetica-Bold').fillColor('#ffffff')
+        .text('Price Proposal', 50, 97, { width: 495, align: 'center' });
 
-      // Title
-      doc.fontSize(18).font('Hebrew-Bold').fillColor('#ffffff').text('הצעת מחיר', 50, 100, { width: 495, align: 'center' });
+      // ── Quote info bar ──
+      doc.rect(50, 148, 495, 32).fill('#f1f5f9');
+      doc.fontSize(9).font('Helvetica').fillColor('#64748b');
+      doc.text(`Quote: ${quoteId}`, 62, 158);
+      doc.text(`Date: ${date}`, 250, 158);
+      doc.text(`${services.length} service${services.length > 1 ? 's' : ''} selected`, 430, 158);
 
-      // ── Quote info ──
-      doc.fillColor('#475569').fontSize(10).font('Hebrew');
-      doc.text(`${quoteId} :מספר הצעה`, 50, 160, { width: 495, align: 'right' });
-      doc.text(`${date} :תאריך`, 50, 175, { width: 495, align: 'right' });
-      doc.text(`${services.length} שירותים נבחרו`, 50, 190, { width: 495, align: 'right' });
-
-      // Divider
-      doc.moveTo(50, 212).lineTo(545, 212).strokeColor('#e2e8f0').lineWidth(0.5).stroke();
-
-      // ── Services ──
-      let y = 230;
-      doc.fontSize(14).font('Hebrew-Bold').fillColor('#020617').text('שירותים שנבחרו', 50, y, { width: 495, align: 'right' });
-      y += 32;
+      // ── Services Section ──
+      let y = 202;
+      doc.fontSize(13).font('Helvetica-Bold').fillColor('#020617')
+        .text('Selected Services', 50, y);
+      y += 30;
 
       // Table header
-      doc.rect(50, y, 495, 30).fill('#f1f5f9');
-      doc.fontSize(9).font('Hebrew-Bold').fillColor('#64748b');
-      doc.text('מחיר', 60, y + 10, { width: 80 });
-      doc.text('שירות', 300, y + 10, { width: 235, align: 'right' });
-      doc.text('#', 510, y + 10, { width: 25, align: 'right' });
-      y += 40;
+      doc.rect(50, y, 495, 28).fill('#020617');
+      doc.fontSize(8).font('Helvetica-Bold').fillColor('#ffffff');
+      doc.text('#', 62, y + 9, { width: 20 });
+      doc.text('SERVICE', 88, y + 9);
+      doc.text('PRICE (ILS)', 430, y + 9, { width: 105, align: 'right' });
+      y += 36;
 
       // Service rows
-      doc.font('Hebrew').fontSize(10);
       services.forEach((service, i) => {
         if (i % 2 === 0) {
-          doc.rect(50, y - 6, 495, 26).fill('#f8fafc');
+          doc.rect(50, y - 5, 495, 28).fill('#f8fafc');
         }
-        doc.fillColor('#94a3b8').text(`${i + 1}`, 510, y, { width: 25, align: 'right' });
-        doc.fillColor('#1e293b').text(service.nameHe || service.name, 140, y, { width: 395, align: 'right' });
+
+        doc.fontSize(9).font('Helvetica').fillColor('#94a3b8')
+          .text(`${i + 1}`, 62, y + 2, { width: 20 });
+        doc.fontSize(10).font('Helvetica').fillColor('#1e293b')
+          .text(service.name, 88, y + 1);
+
         if (service.customPrice) {
-          doc.fillColor('#00a6ff').fontSize(9).text('בהתאמה אישית', 60, y, { width: 80 });
-          doc.fontSize(10);
+          doc.fontSize(9).font('Helvetica-Bold').fillColor('#00a6ff')
+            .text('Custom Quote', 430, y + 1, { width: 105, align: 'right' });
         } else {
-          doc.fillColor('#475569').text(`₪${service.price.toLocaleString()}`, 60, y, { width: 80 });
+          doc.fontSize(10).font('Helvetica').fillColor('#334155')
+            .text(`${service.price.toLocaleString()} NIS`, 430, y + 1, { width: 105, align: 'right' });
         }
-        y += 26;
+        y += 28;
       });
 
-      // ── Totals ──
-      y += 16;
-      doc.moveTo(50, y).lineTo(250, y).strokeColor('#e2e8f0').lineWidth(0.5).stroke();
+      // ── Totals Section ──
       y += 12;
+      doc.rect(310, y, 235, 1).fill('#e2e8f0');
+      y += 14;
 
       // Before VAT
-      doc.fontSize(10).font('Hebrew').fillColor('#475569');
-      doc.text(`₪${beforeVat.toLocaleString()}`, 60, y, { width: 80 });
-      doc.text(':לפני מע״מ', 140, y, { width: 110, align: 'right' });
+      doc.fontSize(10).font('Helvetica').fillColor('#64748b');
+      doc.text('Before VAT:', 320, y);
+      doc.text(`${beforeVat.toLocaleString()} NIS`, 430, y, { width: 105, align: 'right' });
       y += 20;
 
       // VAT
-      doc.text(`₪${vat.toLocaleString()}`, 60, y, { width: 80 });
-      doc.text(':(18%) מע״מ', 140, y, { width: 110, align: 'right' });
-      y += 24;
+      doc.text('VAT (18%):', 320, y);
+      doc.text(`${vat.toLocaleString()} NIS`, 430, y, { width: 105, align: 'right' });
+      y += 22;
 
-      // Total line
-      doc.moveTo(50, y).lineTo(250, y).strokeColor('#00a6ff').lineWidth(2).stroke();
-      y += 14;
-
+      // Total highlight
+      doc.rect(310, y, 235, 40).fill('#020617');
+      doc.fontSize(12).font('Helvetica-Bold').fillColor('#ffffff')
+        .text('TOTAL (incl. VAT)', 322, y + 13);
       const suffix = customServices.length ? '+' : '';
-      doc.fontSize(14).font('Hebrew-Bold').fillColor('#020617');
-      doc.text(`₪${total.toLocaleString()}${suffix}`, 55, y, { width: 85 });
-      doc.text(':סה״כ כולל מע״מ', 140, y, { width: 130, align: 'right' });
-      y += 26;
+      doc.fontSize(14).font('Helvetica-Bold').fillColor('#00a6ff')
+        .text(`${total.toLocaleString()}${suffix} NIS`, 430, y + 12, { width: 105, align: 'right' });
+      y += 50;
 
       if (customServices.length) {
-        doc.fontSize(9).font('Hebrew').fillColor('#94a3b8');
-        doc.text(`* ${customServices.map(s => s.nameHe || s.name).join(', ')} — תמחור בהתאמה אישית`, 50, y, { width: 495, align: 'right' });
-        y += 16;
+        doc.fontSize(8).font('Helvetica').fillColor('#94a3b8');
+        doc.text(`* ${customServices.map(s => s.name).join(', ')} — pricing upon request`, 310, y);
+        y += 14;
       }
 
-      doc.fontSize(8).font('Hebrew').fillColor('#cbd5e1');
-      doc.text('כל המחירים כוללים מע״מ 18%', 50, y, { width: 200 });
+      doc.fontSize(8).font('Helvetica').fillColor('#cbd5e1');
+      doc.text('All listed prices include 18% VAT.', 310, y);
 
       // ── Footer ──
-      const footerY = 730;
-      doc.rect(0, footerY, 595, 110).fill('#f8fafc');
-      doc.moveTo(50, footerY).lineTo(545, footerY).strokeColor('#e2e8f0').lineWidth(0.5).stroke();
+      const footerY = 740;
+      doc.rect(0, footerY, 595, 60).fill('#f8fafc');
+      doc.rect(50, footerY, 495, 0.5).fill('#e2e8f0');
 
-      doc.fontSize(9).font('Hebrew').fillColor('#64748b');
-      doc.text('זמן אספקה משוער: 5–7 ימי עסקים מאישור הפרויקט.', 50, footerY + 18, { width: 495, align: 'center' });
-      doc.text('הצעה זו בתוקף ל־30 יום מתאריך ההנפקה.', 50, footerY + 33, { width: 495, align: 'center' });
+      doc.fontSize(8).font('Helvetica').fillColor('#64748b');
+      doc.text('Estimated delivery: 5-7 business days from project approval.  |  This quote is valid for 30 days.', 50, footerY + 12, { width: 495, align: 'center' });
 
-      doc.fontSize(10).font('Hebrew-Bold').fillColor('#00a6ff');
-      doc.text('NAXON MOBILE', 50, footerY + 55, { width: 495, align: 'center' });
-      doc.fontSize(8).font('Hebrew').fillColor('#94a3b8');
-      doc.text('פתרונות דיגיטליים חכמים', 50, footerY + 70, { width: 495, align: 'center' });
+      doc.fontSize(9).font('Helvetica-Bold').fillColor('#00a6ff')
+        .text('NAXON MOBILE', 50, footerY + 30, { width: 495, align: 'center' });
+      doc.fontSize(7).font('Helvetica').fillColor('#94a3b8')
+        .text('Smart Digital Solutions', 50, footerY + 43, { width: 495, align: 'center' });
 
       doc.end();
     } catch (err) {
