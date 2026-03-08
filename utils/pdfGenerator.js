@@ -1,203 +1,162 @@
-const puppeteer = require('puppeteer');
+const PDFDocument = require('pdfkit');
 
 function generateQuoteId() {
   return 'NX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
 }
 
-function hebrewDate() {
-  const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+function formatDate() {
   const d = new Date();
-  return `${d.getDate()} ב${months[d.getMonth()]} ${d.getFullYear()}`;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }
 
-function buildHTML(services) {
+async function generateQuotePDF(services) {
   const pricedServices = services.filter(s => !s.customPrice);
   const customServices = services.filter(s => s.customPrice);
   const total = pricedServices.reduce((sum, s) => sum + s.price, 0);
   const beforeVat = Math.round(total / 1.18);
   const vat = total - beforeVat;
   const quoteId = generateQuoteId();
-  const date = hebrewDate();
+  const date = formatDate();
   const suffix = customServices.length ? '+' : '';
 
-  const serviceRows = services.map((s, i) => `
-    <tr class="${i % 2 === 0 ? 'even' : ''}">
-      <td class="num">${i + 1}</td>
-      <td class="svc-name">
-        <strong>${s.nameHe || s.name}</strong>
-        <span class="en-name">${s.name}</span>
-      </td>
-      <td class="price">${s.customPrice ? '<span class="custom">בהתאמה אישית</span>' : `₪${s.price.toLocaleString()}`}</td>
-    </tr>
-  `).join('');
+  const doc = new PDFDocument({ size: 'A4', margin: 0 });
+  const chunks = [];
+  doc.on('data', c => chunks.push(c));
 
-  return `<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Heebo', sans-serif; color: #1e293b; background: #fff; }
-  .en { font-family: 'Inter', sans-serif; direction: ltr; display: inline-block; }
+  const pageW = 595.28;
+  const pageH = 841.89;
+  const margin = 40;
+  const contentW = pageW - margin * 2;
 
-  /* Header */
-  .header {
-    background: linear-gradient(135deg, #020617, #0f172a);
-    padding: 32px 40px 28px;
-    text-align: center;
-    position: relative;
-  }
-  .header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #00a6ff, #38bdf8, #00a6ff);
-  }
-  .logo { font-family: 'Inter', sans-serif; font-size: 28px; font-weight: 800; color: #00a6ff; letter-spacing: 1px; }
-  .subtitle { font-size: 11px; color: #94a3b8; margin-top: 4px; letter-spacing: 1px; }
-  .doc-title { font-size: 20px; font-weight: 700; color: #fff; margin-top: 14px; }
+  // ==================== HEADER ====================
+  const headerH = 90;
+  doc.rect(0, 0, pageW, headerH).fill('#020617');
+  doc.rect(0, headerH, pageW, 3).fill('#00a6ff');
 
-  /* Info bar */
-  .info-bar {
-    display: flex;
-    justify-content: space-between;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    margin: 24px 40px 0;
-    padding: 12px 20px;
-    font-size: 11px;
-    color: #64748b;
-  }
+  doc.font('Helvetica-Bold').fontSize(26).fillColor('#00a6ff');
+  doc.text('NAXON MOBILE', 0, 18, { width: pageW, align: 'center' });
 
-  /* Content */
-  .content { padding: 24px 40px; }
-  .section-title { font-size: 16px; font-weight: 700; color: #020617; margin-bottom: 16px; }
+  doc.font('Helvetica').fontSize(9).fillColor('#94a3b8');
+  doc.text('Smart Digital Solutions  •  Websites  •  AI  •  Automation', 0, 48, { width: pageW, align: 'center' });
 
-  /* Table */
-  table { width: 100%; border-collapse: collapse; }
-  thead { background: #020617; }
-  thead th { color: #fff; font-size: 10px; font-weight: 600; padding: 10px 14px; text-align: right; letter-spacing: 0.5px; }
-  thead th.price-col { text-align: left; }
-  tbody td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 12px; }
-  tr.even td { background: #f8fafc; }
-  .num { color: #94a3b8; width: 30px; text-align: center; }
-  .svc-name strong { display: block; font-size: 13px; }
-  .en-name { font-family: 'Inter', sans-serif; direction: ltr; font-size: 10px; color: #94a3b8; }
-  .price { text-align: left; font-family: 'Inter', sans-serif; font-weight: 600; white-space: nowrap; direction: ltr; }
-  .custom { color: #00a6ff; font-family: 'Heebo', sans-serif; font-size: 11px; font-weight: 500; }
+  doc.font('Helvetica-Bold').fontSize(18).fillColor('#ffffff');
+  doc.text('Price Quote', 0, 64, { width: pageW, align: 'center' });
 
-  /* Totals */
-  .totals { margin-top: 20px; display: flex; justify-content: flex-start; }
-  .totals-box { width: 280px; }
-  .totals-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; color: #64748b; border-bottom: 1px solid #f1f5f9; }
-  .totals-row .val { font-family: 'Inter', sans-serif; direction: ltr; }
-  .total-main {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(135deg, #020617, #0f172a);
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin-top: 8px;
-  }
-  .total-main .label { color: #fff; font-size: 14px; font-weight: 700; }
-  .total-main .amount { font-family: 'Inter', sans-serif; direction: ltr; color: #00a6ff; font-size: 18px; font-weight: 800; }
-  .note { font-size: 9px; color: #94a3b8; margin-top: 8px; }
-  .custom-note { font-size: 10px; color: #94a3b8; margin-top: 6px; }
+  // ==================== INFO BAR ====================
+  const infoY = headerH + 18;
+  doc.roundedRect(margin, infoY, contentW, 32, 6).fill('#f8fafc');
+  doc.roundedRect(margin, infoY, contentW, 32, 6).strokeColor('#e2e8f0').stroke();
 
-  /* Footer */
-  .footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #f8fafc;
-    border-top: 1px solid #e2e8f0;
-    padding: 14px 40px;
-    text-align: center;
-  }
-  .footer p { font-size: 9px; color: #64748b; margin-bottom: 4px; }
-  .footer .brand { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; color: #00a6ff; margin-top: 6px; }
-  .footer .brand-sub { font-size: 8px; color: #94a3b8; }
-</style>
-</head>
-<body>
-  <div class="header">
-    <div class="logo">NAXON MOBILE</div>
-    <div class="subtitle">פתרונות דיגיטליים חכמים &nbsp;•&nbsp; אתרים &nbsp;•&nbsp; AI &nbsp;•&nbsp; אוטומציה</div>
-    <div class="doc-title">הצעת מחיר</div>
-  </div>
+  doc.font('Helvetica').fontSize(9).fillColor('#64748b');
+  doc.text(`Quote #: ${quoteId}`, margin + 14, infoY + 10, { width: 200 });
+  doc.text(`Date: ${date}`, 0, infoY + 10, { width: pageW, align: 'center' });
+  doc.text(`${services.length} service${services.length !== 1 ? 's' : ''} selected`, margin + contentW - 160, infoY + 10, { width: 146, align: 'right' });
 
-  <div class="info-bar">
-    <span>מספר הצעה: <strong class="en">${quoteId}</strong></span>
-    <span>תאריך: <strong>${date}</strong></span>
-    <span>${services.length} שירותים נבחרו</span>
-  </div>
+  // ==================== SERVICES TABLE ====================
+  let curY = infoY + 52;
 
-  <div class="content">
-    <div class="section-title">שירותים שנבחרו</div>
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>שירות</th>
-          <th class="price-col">מחיר</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${serviceRows}
-      </tbody>
-    </table>
+  doc.font('Helvetica-Bold').fontSize(14).fillColor('#020617');
+  doc.text('Selected Services', margin, curY);
+  curY += 26;
 
-    <div class="totals">
-      <div class="totals-box">
-        <div class="totals-row">
-          <span>לפני מע״מ</span>
-          <span class="val">₪${beforeVat.toLocaleString()}</span>
-        </div>
-        <div class="totals-row">
-          <span>מע״מ (18%)</span>
-          <span class="val">₪${vat.toLocaleString()}</span>
-        </div>
-        <div class="total-main">
-          <span class="label">סה״כ כולל מע״מ</span>
-          <span class="amount">₪${total.toLocaleString()}${suffix}</span>
-        </div>
-        ${customServices.length ? `<div class="custom-note">* ${customServices.map(s => s.nameHe || s.name).join(', ')} — תמחור בהתאמה אישית</div>` : ''}
-        <div class="note">כל המחירים כוללים מע״מ 18%</div>
-      </div>
-    </div>
-  </div>
+  // Table header
+  const colNum = margin;
+  const colName = margin + 40;
+  const colPrice = pageW - margin - 90;
+  const rowH = 36;
 
-  <div class="footer">
-    <p>זמן אספקה משוער: 5–7 ימי עסקים מאישור הפרויקט &nbsp;|&nbsp; הצעה זו בתוקף ל־30 יום</p>
-    <div class="brand">NAXON MOBILE</div>
-    <div class="brand-sub">פתרונות דיגיטליים חכמים</div>
-  </div>
-</body>
-</html>`;
-}
+  doc.rect(margin, curY, contentW, 28).fill('#020617');
+  doc.font('Helvetica-Bold').fontSize(9).fillColor('#ffffff');
+  doc.text('#', colNum + 10, curY + 9, { width: 25, align: 'center' });
+  doc.text('SERVICE', colName, curY + 9, { width: 300 });
+  doc.text('PRICE', colPrice, curY + 9, { width: 80, align: 'right' });
+  curY += 28;
 
-async function generateQuotePDF(services) {
-  const html = buildHTML(services);
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  // Table rows
+  services.forEach((s, i) => {
+    const bgColor = i % 2 === 0 ? '#f8fafc' : '#ffffff';
+    doc.rect(margin, curY, contentW, rowH).fill(bgColor);
+
+    // Number
+    doc.font('Helvetica').fontSize(10).fillColor('#94a3b8');
+    doc.text(`${i + 1}`, colNum + 10, curY + 12, { width: 25, align: 'center' });
+
+    // Service name
+    doc.font('Helvetica-Bold').fontSize(12).fillColor('#1e293b');
+    doc.text(s.name, colName, curY + 10, { width: 320 });
+
+    // Price
+    if (s.customPrice) {
+      doc.font('Helvetica').fontSize(10).fillColor('#00a6ff');
+      doc.text('Custom Quote', colPrice, curY + 12, { width: 80, align: 'right' });
+    } else {
+      doc.font('Helvetica-Bold').fontSize(12).fillColor('#1e293b');
+      doc.text(`ILS ${s.price.toLocaleString()}`, colPrice, curY + 10, { width: 80, align: 'right' });
+    }
+
+    // Bottom border
+    doc.moveTo(margin, curY + rowH).lineTo(margin + contentW, curY + rowH).strokeColor('#f1f5f9').lineWidth(1).stroke();
+    curY += rowH;
   });
-  const page = await browser.newPage();
-  await page.setContent(html, { waitUntil: 'networkidle0' });
-  const pdf = await page.pdf({
-    format: 'A4',
-    printBackground: true,
-    margin: { top: '0', right: '0', bottom: '0', left: '0' }
+
+  // ==================== TOTALS ====================
+  curY += 20;
+  const totalsX = pageW - margin - 220;
+  const totalsW = 220;
+
+  // Before VAT
+  doc.font('Helvetica').fontSize(10).fillColor('#64748b');
+  doc.text('Before VAT', totalsX, curY, { width: 120 });
+  doc.text(`ILS ${beforeVat.toLocaleString()}`, totalsX + 120, curY, { width: 100, align: 'right' });
+  doc.moveTo(totalsX, curY + 16).lineTo(totalsX + totalsW, curY + 16).strokeColor('#f1f5f9').lineWidth(1).stroke();
+  curY += 22;
+
+  // VAT
+  doc.font('Helvetica').fontSize(10).fillColor('#64748b');
+  doc.text('VAT (18%)', totalsX, curY, { width: 120 });
+  doc.text(`ILS ${vat.toLocaleString()}`, totalsX + 120, curY, { width: 100, align: 'right' });
+  doc.moveTo(totalsX, curY + 16).lineTo(totalsX + totalsW, curY + 16).strokeColor('#f1f5f9').lineWidth(1).stroke();
+  curY += 24;
+
+  // Total box
+  doc.roundedRect(totalsX, curY, totalsW, 42, 6).fill('#020617');
+  doc.font('Helvetica-Bold').fontSize(12).fillColor('#ffffff');
+  doc.text('Total incl. VAT', totalsX + 14, curY + 14, { width: 100 });
+  doc.font('Helvetica-Bold').fontSize(18).fillColor('#00a6ff');
+  doc.text(`ILS ${total.toLocaleString()}${suffix}`, totalsX + 114, curY + 11, { width: 92, align: 'right' });
+  curY += 50;
+
+  // Custom note
+  if (customServices.length) {
+    const customNames = customServices.map(s => s.name).join(', ');
+    doc.font('Helvetica').fontSize(8).fillColor('#94a3b8');
+    doc.text(`* ${customNames} — custom pricing`, totalsX, curY, { width: totalsW });
+    curY += 14;
+  }
+
+  doc.font('Helvetica').fontSize(7).fillColor('#94a3b8');
+  doc.text('All prices include 18% VAT', totalsX, curY, { width: totalsW });
+
+  // ==================== FOOTER ====================
+  const footerY = pageH - 55;
+  doc.rect(0, footerY, pageW, 55).fill('#f8fafc');
+  doc.moveTo(0, footerY).lineTo(pageW, footerY).strokeColor('#e2e8f0').lineWidth(1).stroke();
+
+  doc.font('Helvetica').fontSize(7).fillColor('#64748b');
+  doc.text('Estimated delivery: 5-7 business days from project approval  |  This quote is valid for 30 days', 0, footerY + 10, { width: pageW, align: 'center' });
+
+  doc.font('Helvetica-Bold').fontSize(10).fillColor('#00a6ff');
+  doc.text('NAXON MOBILE', 0, footerY + 24, { width: pageW, align: 'center' });
+
+  doc.font('Helvetica').fontSize(7).fillColor('#94a3b8');
+  doc.text('Smart Digital Solutions', 0, footerY + 38, { width: pageW, align: 'center' });
+
+  doc.end();
+
+  return new Promise((resolve) => {
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
   });
-  await browser.close();
-  return pdf;
 }
 
 module.exports = { generateQuotePDF };

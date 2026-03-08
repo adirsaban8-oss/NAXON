@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "pdfkit": "^0.13.0",
-    "puppeteer": "^24.38.0"
+    "pdfkit": "^0.13.0"
   }
 }
