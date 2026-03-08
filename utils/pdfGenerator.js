@@ -25,6 +25,7 @@ function buildHTML(services) {
       <td class="num">${i + 1}</td>
       <td class="svc-name">
         <strong>${s.nameHe || s.name}</strong>
+        <span class="en-name">${s.name}</span>
       </td>
       <td class="price">${s.customPrice ? '<span class="custom">בהתאמה אישית</span>' : `₪${s.price.toLocaleString()}`}</td>
     </tr>
