@@ -254,7 +254,7 @@ function sendQuote() {
   const vatAmount = total - beforeVat;
 
   const serviceList = selectedServices.map(s =>
-    `• ${s.nameHe || s.name} / ${s.name}${s.customPrice ? ' (בהתאמה אישית)' : ''}`
+    `• ${s.nameHe || s.name}${s.customPrice ? ' (בהתאמה אישית)' : ''}`
   ).join('\n');
 
   let pricing = '';
