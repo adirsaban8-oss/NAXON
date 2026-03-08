@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer');
 
 function generateQuoteId() {
   return 'NX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -187,8 +187,7 @@ async function generateQuotePDF(services) {
   const html = buildHTML(services);
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox'],
-    executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe'
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: 'networkidle0' });
