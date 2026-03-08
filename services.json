@@ -1,0 +1,185 @@
+{
+  "services": [
+    {
+      "id": "landing-page",
+      "name": "Landing Page",
+      "nameHe": "דף נחיתה",
+      "descHe": "דף נחיתה מקצועי עם עיצוב מודרני, מותאם להמרות ולביצועים מקסימליים.",
+      "descEn": "Professional landing page with modern design, optimized for conversions and performance.",
+      "price": 1100,
+      "icon": "rocket",
+      "category": "main"
+    },
+    {
+      "id": "catalog-website",
+      "name": "Catalog Website",
+      "nameHe": "אתר קטלוג",
+      "descHe": "אתר קטלוג מלא עם דפי מוצרים, קטגוריות וניווט חכם.",
+      "descEn": "Full catalog website with product pages, categories, and smart navigation.",
+      "price": 5400,
+      "icon": "layout-grid",
+      "category": "main"
+    },
+    {
+      "id": "ai-chatbot",
+      "name": "AI Chatbot",
+      "nameHe": "צ'אטבוט AI",
+      "descHe": "צ'אטבוט חכם מבוסס בינה מלאכותית שעונה ללקוחות שלך 24/7.",
+      "descEn": "Smart AI-powered chatbot that responds to your customers 24/7.",
+      "price": 2400,
+      "icon": "message-square",
+      "category": "main"
+    },
+    {
+      "id": "super-ai-bot",
+      "name": "Super AI Knowledge Bot",
+      "nameHe": "בוט ידע AI מתקדם",
+      "descHe": "בוט ידע מתקדם שנבנה על בסיס הנתונים והמסמכים של העסק שלך.",
+      "descEn": "Advanced knowledge bot built on your business data and documents.",
+      "price": 5200,
+      "icon": "brain",
+      "category": "main"
+    },
+    {
+      "id": "business-automations",
+      "name": "Business Automations",
+      "nameHe": "אוטומציות עסקיות",
+      "descHe": "אוטומציה של תהליכים עסקיים לחיסכון בזמן ושיפור היעילות.",
+      "descEn": "Automate business processes to save time and improve efficiency.",
+      "price": 2200,
+      "icon": "zap",
+      "category": "main"
+    },
+    {
+      "id": "ai-agents",
+      "name": "AI Agents",
+      "nameHe": "סוכני AI",
+      "descHe": "סוכנים חכמים שמבצעים משימות מורכבות באופן אוטונומי עבור העסק.",
+      "descEn": "Intelligent agents that autonomously perform complex tasks for your business.",
+      "price": 4800,
+      "icon": "cpu",
+      "category": "main"
+    },
+    {
+      "id": "data-analysis",
+      "name": "Business Data Analysis",
+      "nameHe": "ניתוח נתונים עסקי",
+      "descHe": "ניתוח מעמיק של נתוני העסק להפקת תובנות ושיפור קבלת החלטות.",
+      "descEn": "Deep business data analysis for insights and better decision-making.",
+      "price": 2300,
+      "icon": "bar-chart",
+      "category": "main"
+    },
+    {
+      "id": "premium-website",
+      "name": "Premium Business Website System",
+      "nameHe": "מערכת אתר עסקי פרימיום",
+      "descHe": "מערכת אתר מתקדמת עם ניהול תוכן, אנליטיקס ואינטגרציות מלאות.",
+      "descEn": "Advanced website system with CMS, analytics, and full integrations.",
+      "price": 6400,
+      "icon": "globe",
+      "category": "main"
+    },
+    {
+      "id": "payment-integration",
+      "name": "Payment Integration",
+      "nameHe": "אינטגרציית תשלומים",
+      "descHe": "חיבור למערכות תשלום מאובטחות כולל כרטיסי אשראי ו-PayPal.",
+      "descEn": "Secure payment gateway integration including credit cards and PayPal.",
+      "price": 600,
+      "icon": "credit-card",
+      "category": "additional"
+    },
+    {
+      "id": "seo-basic",
+      "name": "SEO Basic",
+      "nameHe": "קידום אתרים בסיסי",
+      "descHe": "אופטימיזציה בסיסית למנועי חיפוש כולל מילות מפתח ומטא תגיות.",
+      "descEn": "Basic search engine optimization including keywords and meta tags.",
+      "price": 450,
+      "icon": "search",
+      "category": "additional"
+    },
+    {
+      "id": "seo-advanced",
+      "name": "SEO Advanced",
+      "nameHe": "קידום אתרים מתקדם",
+      "descHe": "אסטרטגיית SEO מלאה כולל תוכן, קישורים וניתוח מתחרים.",
+      "descEn": "Full SEO strategy including content, backlinks, and competitor analysis.",
+      "price": 1200,
+      "icon": "trending-up",
+      "category": "additional"
+    },
+    {
+      "id": "whatsapp-integration",
+      "name": "WhatsApp Integration",
+      "nameHe": "אינטגרציית וואטסאפ",
+      "descHe": "כפתור וואטסאפ חכם עם הודעות אוטומטיות ומעקב שיחות.",
+      "descEn": "Smart WhatsApp button with automated messages and conversation tracking.",
+      "price": 300,
+      "icon": "message-circle",
+      "category": "additional"
+    },
+    {
+      "id": "waze-integration",
+      "name": "Waze Integration",
+      "nameHe": "אינטגרציית Waze",
+      "descHe": "ניווט ישיר לעסק דרך Waze בלחיצה אחת.",
+      "descEn": "Direct navigation to your business via Waze in one click.",
+      "price": 150,
+      "icon": "map-pin",
+      "category": "additional"
+    },
+    {
+      "id": "advanced-gallery",
+      "name": "Advanced Gallery",
+      "nameHe": "גלריה מתקדמת",
+      "descHe": "גלריית תמונות ווידאו מתקדמת עם אנימציות ותצוגה מרשימה.",
+      "descEn": "Advanced photo and video gallery with animations and impressive display.",
+      "price": 350,
+      "icon": "image",
+      "category": "additional"
+    },
+    {
+      "id": "blog-system",
+      "name": "Blog System",
+      "nameHe": "מערכת בלוג",
+      "descHe": "מערכת בלוג מלאה עם עורך תוכן, קטגוריות ושיתוף לרשתות.",
+      "descEn": "Full blog system with content editor, categories, and social sharing.",
+      "price": 450,
+      "icon": "file-text",
+      "category": "additional"
+    },
+    {
+      "id": "multilanguage",
+      "name": "Multilanguage",
+      "nameHe": "רב שפתיות",
+      "descHe": "תמיכה במספר שפות עם מעבר אוטומטי לפי מיקום המשתמש.",
+      "descEn": "Multi-language support with automatic switching based on user location.",
+      "price": 900,
+      "icon": "languages",
+      "category": "additional"
+    },
+    {
+      "id": "customer-area",
+      "name": "Customer Area",
+      "nameHe": "אזור לקוחות",
+      "descHe": "אזור אישי מאובטח ללקוחות עם לוח בקרה, הזמנות והיסטוריה.",
+      "descEn": "Secure personal area for customers with dashboard, orders, and history.",
+      "price": 1200,
+      "icon": "users",
+      "category": "additional"
+    },
+    {
+      "id": "monthly-maintenance",
+      "name": "Monthly Maintenance",
+      "nameHe": "תחזוקה חודשית",
+      "descHe": "תחזוקה שוטפת כולל עדכונים, גיבויים, אבטחה וניטור ביצועים.",
+      "descEn": "Ongoing maintenance including updates, backups, security, and monitoring.",
+      "price": 250,
+      "icon": "settings",
+      "category": "additional"
+    }
+  ],
+  "adminPassword": "naxon2024"
+}

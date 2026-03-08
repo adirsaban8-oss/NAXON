@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NAXON MOBILE — מחולל הצעות מחיר חכם</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Heebo', 'Inter', 'sans-serif'],
+            en: ['Inter', 'sans-serif']
+          },
+          colors: {
+            electric: {
+              DEFAULT: '#00a6ff',
+              light: '#38bdf8',
+              bright: '#00d4ff',
+              dark: '#0284c7',
+              glow: '#00a6ff'
+            },
+            surface: {
+              50: '#ffffff',
+              100: '#f8fafc',
+              200: '#f1f5f9',
+              300: '#e2e8f0',
+              400: '#cbd5e1',
+              500: '#94a3b8',
+              600: '#64748b',
+              700: '#475569',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-surface-950 text-white font-sans min-h-screen antialiased">
+
+  <!-- Ambient Background -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-electric/5 rounded-full blur-[150px] animate-drift"></div>
+    <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-electric-bright/3 rounded-full blur-[130px] animate-drift-reverse"></div>
+    <div class="absolute top-[40%] left-[50%] w-[300px] h-[300px] bg-blue-500/3 rounded-full blur-[100px] animate-pulse-slow"></div>
+  </div>
+
+  <!-- Grid Pattern Overlay -->
+  <div class="fixed inset-0 pointer-events-none opacity-[0.02]" style="background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 60px 60px;"></div>
+
+  <!-- Header -->
+  <header class="relative z-10 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-electric/[0.03] via-transparent to-transparent"></div>
+    <div class="relative z-10 pt-10 pb-8 px-4 text-center">
+      <!-- Brand Badge -->
+      <div class="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/[0.04] border border-white/[0.06] backdrop-blur-sm mb-7">
+        <div class="relative">
+          <span class="w-2.5 h-2.5 rounded-full bg-electric block animate-pulse"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-electric absolute inset-0 animate-ping opacity-50"></span>
+        </div>
+        <span class="text-electric text-xs font-medium tracking-widest uppercase font-en">Smart Quote Generator</span>
+      </div>
+
+      <!-- Logo -->
+      <h1 class="text-5xl md:text-6xl font-black tracking-tight mb-3" dir="ltr">
+        <span class="bg-gradient-to-r from-white via-electric-light to-electric bg-clip-text text-transparent">NAXON MOBILE</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-lg text-white/70 font-semibold mb-1">פתרונות דיגיטליים חכמים</p>
+      <p class="text-sm text-surface-500 font-en tracking-wider">Smart Digital Solutions</p>
+
+      <div class="flex items-center justify-center gap-3 mt-3 text-xs text-surface-600">
+        <span>אתרים</span>
+        <span class="w-1 h-1 rounded-full bg-electric/40"></span>
+        <span>בינה מלאכותית</span>
+        <span class="w-1 h-1 rounded-full bg-electric/40"></span>
+        <span>אוטומציה</span>
+      </div>
+
+      <!-- Main CTA Text -->
+      <div class="mt-9 max-w-lg mx-auto">
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">בנה את האתר שלך</h2>
+        <p class="text-surface-400 text-base">וקבל הצעת מחיר מיידית</p>
+        <p class="text-surface-600 text-xs font-en mt-1">Build your website and get an instant quote</p>
+      </div>
+
+      <!-- Decorative Line -->
+      <div class="mt-8 flex items-center justify-center">
+        <div class="h-px w-16 bg-gradient-to-r from-transparent to-electric/30"></div>
+        <div class="w-2 h-2 rounded-full bg-electric/30 mx-3"></div>
+        <div class="h-px w-16 bg-gradient-to-l from-transparent to-electric/30"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="relative z-10 max-w-6xl mx-auto px-4 pb-32 md:pb-12">
+
+    <!-- Core Services -->
+    <section class="mb-12">
+      <div class="flex items-center gap-4 mb-7">
+        <div class="h-px flex-1 bg-gradient-to-l from-electric/20 to-transparent"></div>
+        <div class="flex flex-col items-center">
+          <h3 class="text-sm font-bold text-electric tracking-wide">שירותים מרכזיים</h3>
+          <span class="text-[10px] text-surface-600 font-en mt-0.5">Core Services</span>
+        </div>
+        <div class="h-px flex-1 bg-gradient-to-r from-electric/20 to-transparent"></div>
+      </div>
+      <div id="main-services" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+    </section>
+
+    <!-- Additional Services -->
+    <section class="mb-12">
+      <div class="flex items-center gap-4 mb-7">
+        <div class="h-px flex-1 bg-gradient-to-l from-sky-400/20 to-transparent"></div>
+        <div class="flex flex-col items-center">
+          <h3 class="text-sm font-bold text-sky-400 tracking-wide">שירותים נוספים</h3>
+          <span class="text-[10px] text-surface-600 font-en mt-0.5">Additional Services</span>
+        </div>
+        <div class="h-px flex-1 bg-gradient-to-r from-sky-400/20 to-transparent"></div>
+      </div>
+      <div id="additional-services" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+    </section>
+
+    <!-- Desktop Quote Panel -->
+    <section id="quote-panel-desktop" class="hidden md:block mt-10">
+      <div class="quote-card rounded-2xl p-7 border border-white/[0.06]">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-electric/10 flex items-center justify-center">
+              <i data-lucide="file-text" class="w-5 h-5 text-electric"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white">סיכום הצעת מחיר</h3>
+              <span class="text-[10px] text-surface-600 font-en">Quote Summary</span>
+            </div>
+          </div>
+          <button onclick="resetSelection()" class="text-xs text-surface-500 hover:text-red-400 transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-red-500/5">
+            <i data-lucide="rotate-ccw" class="w-3 h-3"></i> איפוס
+          </button>
+        </div>
+        <div id="quote-items-desktop" class="space-y-2 mb-6 min-h-[60px]">
+          <p class="text-surface-600 text-sm">בחר שירותים כדי לבנות הצעת מחיר...</p>
+          <p class="text-surface-700 text-xs font-en">Select services to build your quote...</p>
+        </div>
+        <div id="quote-totals-desktop" class="hidden border-t border-white/5 pt-5 space-y-3">
+          <div class="flex justify-between text-sm text-surface-400">
+            <span>סכום ביניים <span class="text-[10px] text-surface-600 font-en mr-1">Subtotal</span></span>
+            <span id="subtotal-desktop" class="font-mono font-en">₪0</span>
+          </div>
+          <div class="flex justify-between text-sm text-surface-400">
+            <span>מע״מ (18%) <span class="text-[10px] text-surface-600 font-en mr-1">VAT</span></span>
+            <span id="vat-desktop" class="font-mono font-en">₪0</span>
+          </div>
+          <div class="flex justify-between text-xl font-bold pt-3 border-t border-electric/20">
+            <span class="text-white">סה״כ <span class="text-xs text-surface-500 font-normal font-en mr-1">Total</span></span>
+            <span id="total-desktop" class="font-mono font-en bg-gradient-to-r from-electric-light to-electric bg-clip-text text-transparent">₪0</span>
+          </div>
+        </div>
+        <div id="quote-actions-desktop" class="hidden mt-7 grid grid-cols-2 gap-3">
+          <button onclick="downloadPDF()" class="btn-primary py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>הורד PDF</span>
+          </button>
+          <button onclick="sendQuote()" class="btn-secondary py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span>שלח הצעה</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Mobile Floating Quote Panel -->
+  <div id="mobile-quote-bar" class="fixed bottom-0 left-0 right-0 z-50 md:hidden translate-y-full transition-transform duration-300">
+    <div class="mobile-panel-bg border-t border-white/[0.06] px-4 pt-3 pb-safe">
+      <div id="mobile-bar-collapsed" class="flex items-center justify-between" onclick="toggleMobilePanel()">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-electric/15 flex items-center justify-center">
+            <i data-lucide="receipt" class="w-4 h-4 text-electric"></i>
+          </div>
+          <div>
+            <p class="text-xs text-surface-400"><span id="mobile-count">0</span> שירותים נבחרו</p>
+            <p class="text-xl font-bold font-mono font-en bg-gradient-to-r from-electric-light to-electric bg-clip-text text-transparent" id="mobile-total">₪0</p>
+          </div>
+        </div>
+        <i data-lucide="chevron-up" id="mobile-chevron" class="w-5 h-5 text-surface-400 transition-transform"></i>
+      </div>
+      <div id="mobile-panel-expanded" class="hidden mt-4 pb-4">
+        <div id="quote-items-mobile" class="space-y-2 mb-4 max-h-[40vh] overflow-y-auto"></div>
+        <div class="border-t border-white/5 pt-3 space-y-2 mb-4">
+          <div class="flex justify-between text-sm text-surface-400">
+            <span>סכום ביניים</span><span id="subtotal-mobile" class="font-mono font-en">₪0</span>
+          </div>
+          <div class="flex justify-between text-sm text-surface-400">
+            <span>מע״מ (18%)</span><span id="vat-mobile" class="font-mono font-en">₪0</span>
+          </div>
+          <div class="flex justify-between text-lg font-bold pt-2 border-t border-electric/20">
+            <span class="text-white">סה״כ</span>
+            <span id="total-mobile" class="font-mono font-en bg-gradient-to-r from-electric-light to-electric bg-clip-text text-transparent">₪0</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="downloadPDF()" class="btn-primary py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-4 h-4"></i> PDF
+          </button>
+          <button onclick="sendQuote()" class="btn-secondary py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i> שלח
+          </button>
+        </div>
+        <button onclick="resetSelection()" class="w-full mt-2 py-2 text-xs text-surface-500 hover:text-red-400 transition-colors flex items-center justify-center gap-1">
+          <i data-lucide="rotate-ccw" class="w-3 h-3"></i> איפוס בחירה
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Send Quote Modal -->
+  <div id="send-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-surface-950/80 backdrop-blur-sm p-4">
+    <div class="quote-card rounded-2xl p-6 w-full max-w-lg border border-white/[0.08] max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="text-lg font-bold text-white">שלח הצעת מחיר</h3>
+          <p class="text-[10px] text-surface-600 font-en">Send Quote</p>
+        </div>
+        <button onclick="closeModal()" class="text-surface-500 hover:text-white transition-colors w-8 h-8 rounded-lg hover:bg-white/5 flex items-center justify-center">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-surface-400 mb-3">העתק את ההודעה ושלח אלינו:</p>
+      <textarea id="quote-message" readonly class="w-full h-48 bg-surface-950 border border-white/[0.06] rounded-xl p-4 text-sm text-surface-300 font-mono resize-none focus:outline-none focus:border-electric/30" dir="ltr"></textarea>
+      <button onclick="copyMessage()" id="copy-btn" class="btn-primary w-full py-3.5 rounded-xl text-sm font-bold mt-4 flex items-center justify-center gap-2">
+        <i data-lucide="copy" class="w-4 h-4"></i> העתק הודעה
+      </button>
+      <a id="whatsapp-link" href="#" target="_blank" class="btn-whatsapp w-full py-3.5 rounded-xl text-sm font-bold mt-3 flex items-center justify-center gap-2">
+        <i data-lucide="message-circle" class="w-4 h-4"></i> שלח בוואטסאפ
+      </a>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

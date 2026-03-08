@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAXON MOBILE — ניהול</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Heebo', 'Inter', 'sans-serif'], en: ['Inter', 'sans-serif'] },
+          colors: {
+            electric: { DEFAULT: '#00a6ff', light: '#38bdf8', dark: '#0284c7' },
+            surface: { 50: '#ffffff', 100: '#f8fafc', 200: '#f1f5f9', 300: '#e2e8f0', 400: '#cbd5e1', 500: '#94a3b8', 600: '#64748b', 700: '#475569', 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .font-en { font-family: 'Inter', sans-serif; direction: ltr; }
+  </style>
+</head>
+<body class="bg-surface-950 text-white font-sans min-h-screen">
+
+  <!-- Login -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-sm">
+      <h1 class="text-3xl font-bold text-center mb-1 font-en bg-gradient-to-r from-white to-electric bg-clip-text text-transparent">NAXON MOBILE</h1>
+      <p class="text-surface-500 text-center text-sm mb-8">פאנל ניהול</p>
+      <div class="bg-surface-900 rounded-2xl p-6 border border-white/5">
+        <label class="text-xs text-surface-400 block mb-2">סיסמה</label>
+        <input id="password" type="password" class="w-full bg-surface-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-electric/50 mb-4" placeholder="הזן סיסמת ניהול">
+        <button onclick="login()" class="w-full bg-gradient-to-r from-electric to-electric-dark text-white font-bold py-3 rounded-xl text-sm hover:shadow-lg hover:shadow-electric/20 transition-all">
+          כניסה
+        </button>
+        <p id="login-error" class="text-red-400 text-xs mt-3 hidden text-center">סיסמה שגויה</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="admin-dashboard" class="hidden">
+    <header class="border-b border-white/5 px-6 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-lg font-bold font-en bg-gradient-to-r from-white to-electric bg-clip-text text-transparent">NAXON MOBILE</h1>
+        <p class="text-xs text-surface-500">ניהול שירותים</p>
+      </div>
+      <div class="flex gap-3">
+        <a href="/" class="text-xs text-surface-400 hover:text-white transition-colors px-3 py-2 rounded-lg bg-white/5">← חזור לאתר</a>
+        <button onclick="logout()" class="text-xs text-surface-400 hover:text-red-400 transition-colors px-3 py-2 rounded-lg bg-white/5">התנתק</button>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-6">
+      <!-- Add Service -->
+      <div class="bg-surface-900 rounded-2xl p-6 border border-white/5 mb-6">
+        <h2 class="text-sm font-semibold text-white mb-4">הוסף שירות חדש</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+          <input id="new-nameHe" type="text" placeholder="שם בעברית" class="bg-surface-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-electric/50">
+          <input id="new-name" type="text" placeholder="Name in English" dir="ltr" class="bg-surface-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-electric/50 font-en">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+          <input id="new-descHe" type="text" placeholder="תיאור בעברית" class="bg-surface-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-electric/50">
+          <input id="new-descEn" type="text" placeholder="Description in English" dir="ltr" class="bg-surface-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-electric/50 font-en">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input id="new-price" type="number" placeholder="מחיר (₪)" class="bg-surface-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-electric/50">
+          <select id="new-category" class="bg-surface-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-electric/50">
+            <option value="main">שירות מרכזי</option>
+            <option value="additional">שירות נוסף</option>
+          </select>
+        </div>
+        <button onclick="addService()" class="mt-4 bg-electric/15 text-electric px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-electric/25 transition-all">
+          + הוסף שירות
+        </button>
+      </div>
+
+      <!-- Service List -->
+      <div id="services-list" class="space-y-3"></div>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
